@@ -36,13 +36,13 @@ public class PokerRuleServiceImpl implements IPokerRuleService {
     return card.charAt(1);
   }
 
-  private CardValueEnum getValue(String card) {
-    return CardValueEnum.valueOf(card.substring(0, 1));
+  private char getValue(String card) {
+    return card.charAt(0);
   }
 
   private boolean containsValue(CardValueEnum value, String[] cards) {
     for (String card : cards) {
-      if (value == getValue(card)) {
+      if (value.getValue() == getValue(card)) {
         return true;
       }
     }

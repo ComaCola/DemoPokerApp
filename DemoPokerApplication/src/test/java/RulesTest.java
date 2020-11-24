@@ -4,17 +4,22 @@
  * and open the template in the editor.
  */
 
+import com.demo.poker.DemoPokerApplication;
 import com.demo.poker.model.Game;
 import com.demo.poker.model.Player;
 import com.demo.poker.service.IPokerRuleService;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
  * @author Deividas
  */
-@SpringBootTest
+@SpringBootTest(classes = DemoPokerApplication.class)
+@RunWith(SpringRunner.class)
 public class RulesTest {
 
   @Autowired

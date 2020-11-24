@@ -1,16 +1,17 @@
 
+import com.demo.poker.DemoPokerApplication;
 import com.demo.poker.model.Game;
 import com.demo.poker.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  *
  * @author Deividas
  */
-@SpringBootTest
+@SpringBootTest(classes = DemoPokerApplication.class)
 public class ReadAndParseDataTest {
 
   private final String URL_STR = "https://projecteuler.net/project/resources/p054_poker.txt";

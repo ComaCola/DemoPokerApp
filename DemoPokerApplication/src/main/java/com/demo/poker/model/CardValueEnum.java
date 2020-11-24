@@ -1,5 +1,7 @@
 package com.demo.poker.model;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Deividas
@@ -16,6 +18,10 @@ public enum CardValueEnum {
 
   public char getValue() {
     return value;
+  }
+
+  public boolean contains(char cardValue) {
+    return Arrays.stream(CardValueEnum.values()).anyMatch(e -> e.value == cardValue);
   }
 
 }
