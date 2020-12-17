@@ -1,3 +1,5 @@
+package com.test.parse;
+
 
 import com.demo.poker.DemoPokerApplication;
 import com.demo.poker.model.Game;
