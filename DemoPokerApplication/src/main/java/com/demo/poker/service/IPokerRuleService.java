@@ -5,6 +5,8 @@ import com.demo.poker.model.rules.FourOfAKindResult;
 import com.demo.poker.model.rules.FullHouseResult;
 import com.demo.poker.model.rules.HighCardResult;
 import com.demo.poker.model.rules.OnePairResult;
+import com.demo.poker.model.rules.RoyalFlushResult;
+import com.demo.poker.model.rules.StraightFlushResult;
 import com.demo.poker.model.rules.StraightResult;
 import com.demo.poker.model.rules.ThreeOfAKindResult;
 import com.demo.poker.model.rules.TwoPairsResult;
@@ -15,9 +17,9 @@ import com.demo.poker.model.rules.TwoPairsResult;
  */
 public interface IPokerRuleService {
 
-  boolean isRoyalFlush(String[] cards);
+  RoyalFlushResult isRoyalFlush(String[] cards);
 
-  boolean isStraightFlush(String[] cards);
+  StraightFlushResult isStraightFlush(String[] cards);
 
   FourOfAKindResult isFourOfAKind(String[] cards);
 

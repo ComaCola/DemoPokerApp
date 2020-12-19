@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public final class HighCardResult implements Serializable, Comparable<HighCardResult> {
+public class HighCardResult implements Serializable, Comparable<HighCardResult> {
 
   private final int highestCardValue;
   private final int secondCardValue;

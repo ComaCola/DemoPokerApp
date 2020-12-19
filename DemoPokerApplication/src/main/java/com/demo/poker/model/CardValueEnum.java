@@ -30,7 +30,7 @@ public enum CardValueEnum {
   private static final Map<Character, CardValueEnum> cardMap = new HashMap<>();
 
   static {
-    Arrays.stream(values()).forEach(e -> cardMap.put(e.symbol, e));
+    Arrays.stream(values()).forEach(card -> cardMap.put(card.symbol, card));
   }
 
   private CardValueEnum(char symbol, int value) {

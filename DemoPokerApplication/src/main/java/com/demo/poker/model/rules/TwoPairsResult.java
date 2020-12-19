@@ -9,7 +9,7 @@ import lombok.Data;
  * @author Deividas
  */
 @Data
-public final class TwoPairsResult implements Serializable, Comparable<TwoPairsResult> {
+public class TwoPairsResult implements Serializable, Comparable<TwoPairsResult> {
 
   private final boolean isFull;
   private final int firstPairValue;

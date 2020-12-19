@@ -9,7 +9,7 @@ import lombok.Data;
  * @author Deividas
  */
 @Data
-public final class ThreeOfAKindResult implements Serializable, Comparable<ThreeOfAKindResult> {
+public class ThreeOfAKindResult implements Serializable, Comparable<ThreeOfAKindResult> {
 
   private final boolean isFull;
   private final int threeOfAKindValue;

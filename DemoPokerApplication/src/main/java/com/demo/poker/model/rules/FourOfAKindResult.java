@@ -2,26 +2,32 @@ package com.demo.poker.model.rules;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  *
  * @author Deividas
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class FourOfAKindResult implements Serializable, Comparable<FourOfAKindResult> {
 
-  private boolean isFull; // is four of a kind
-  private int value;      // card value
+  private final boolean isFull;
+  private int fourOfAKindValue;      // card value
+
+  public FourOfAKindResult() {
+    isFull = false;
+    fourOfAKindValue = 0;
+  }
+
+  public FourOfAKindResult(int fourOfAKindValue) {
+    isFull = true;
+    this.fourOfAKindValue = fourOfAKindValue;
+  }
 
   @Override
   public int compareTo(FourOfAKindResult player2) {
     return Comparator.comparing(FourOfAKindResult::isFull)
-            .thenComparing(FourOfAKindResult::getValue)
+            .thenComparing(FourOfAKindResult::getFourOfAKindValue)
             .compare(this, player2);
   }
 

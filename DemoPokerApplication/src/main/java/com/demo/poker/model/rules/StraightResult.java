@@ -9,10 +9,10 @@ import lombok.Data;
  * @author Deividas
  */
 @Data
-public final class StraightResult implements Serializable, Comparable<StraightResult> {
+public class StraightResult implements Serializable, Comparable<StraightResult> {
 
   private final boolean isFull;
-  private int highestCardValue;
+  private final int highestCardValue;
 
   public StraightResult() {
     isFull = false;

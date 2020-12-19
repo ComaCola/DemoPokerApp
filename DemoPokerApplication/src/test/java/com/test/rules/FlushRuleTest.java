@@ -45,4 +45,19 @@ public class FlushRuleTest {
     FlushResult player2Result = service.isFlush(new String[]{"2D", "3D", "5D", "7D", "AS"});
     Assertions.assertTrue(player1Result.compareTo(player2Result) > 0);
   }
+
+  @Test
+  public void bothFlushTest() {
+    FlushResult player1Result = service.isFlush(new String[]{"2D", "3D", "5D", "7D", "AD"});
+    FlushResult player2Result = service.isFlush(new String[]{"2S", "3S", "5S", "7S", "AS"});
+    Assertions.assertTrue(player1Result.isFull());
+    Assertions.assertTrue(player2Result.isFull());
+  }
+
+  @Test
+  public void bothFlushPlayer2WinsWithLAstCardTest() {
+    FlushResult player1Result = service.isFlush(new String[]{"2D", "3D", "5D", "7D", "KD"});
+    FlushResult player2Result = service.isFlush(new String[]{"2S", "3S", "5S", "7S", "AS"});
+    Assertions.assertTrue(player1Result.compareTo(player2Result) < 0);
+  }
 }

@@ -3,11 +3,14 @@ package com.demo.poker.service;
 import com.demo.poker.model.CardValueEnum;
 import org.springframework.stereotype.Service;
 import static com.demo.poker.model.CardValueEnum.*;
+import com.demo.poker.model.SuitEnum;
 import com.demo.poker.model.rules.FlushResult;
 import com.demo.poker.model.rules.FourOfAKindResult;
 import com.demo.poker.model.rules.FullHouseResult;
 import com.demo.poker.model.rules.HighCardResult;
 import com.demo.poker.model.rules.OnePairResult;
+import com.demo.poker.model.rules.RoyalFlushResult;
+import com.demo.poker.model.rules.StraightFlushResult;
 import com.demo.poker.model.rules.StraightResult;
 import com.demo.poker.model.rules.ThreeOfAKindResult;
 import com.demo.poker.model.rules.TwoPairsResult;
@@ -27,16 +30,24 @@ import java.util.stream.Stream;
 public class PokerRuleServiceImpl implements IPokerRuleService {
 
   @Override
-  public boolean isRoyalFlush(String[] cards) {
-    return hasSameSuit(cards) && containsValue(_10, cards)
-            && containsValue(JACK, cards) && containsValue(QUEEN, cards)
-            && containsValue(KING, cards) && containsValue(ACE, cards);
-
+  public RoyalFlushResult isRoyalFlush(String[] cards) {
+    if (hasSameSuit(cards) && containsValue(cards, _10)
+            && containsValue(cards, JACK) && containsValue(cards, QUEEN)
+            && containsValue(cards, KING) && containsValue(cards, ACE)) {
+      return new RoyalFlushResult(SuitEnum.getSuitValue(getSuit(cards[0])));
+    }
+    return new RoyalFlushResult();
   }
 
   @Override
-  public boolean isStraightFlush(String[] cards) {
-    return hasSameSuit(cards) /*&& TODO */;
+  public StraightFlushResult isStraightFlush(String[] cards) {
+    if (hasSameSuit(cards)) {
+      StraightResult straight = isStraight(cards);
+      if (straight.isFull()) {
+        return new StraightFlushResult(straight.getHighestCardValue());
+      }
+    }
+    return new StraightFlushResult();
   }
 
   @Override
@@ -45,7 +56,7 @@ public class PokerRuleServiceImpl implements IPokerRuleService {
     if (valuesMap.size() == 2 && valuesMap.containsValue(4L)) {
       char kind = valuesMap.entrySet().stream().filter(entry -> entry.getValue() == 4).findFirst().get().getKey();
       int value = CardValueEnum.getValue(kind);
-      FourOfAKindResult result = new FourOfAKindResult(true, value);
+      FourOfAKindResult result = new FourOfAKindResult(value);
       return result;
     }
     return new FourOfAKindResult();
@@ -56,14 +67,18 @@ public class PokerRuleServiceImpl implements IPokerRuleService {
     int threeOfAKindValue = hasThreeOfAKind(cards);
     int pairValue = hasPair(cards);
     if (threeOfAKindValue > 0 && pairValue > 0) {
-      return new FullHouseResult(threeOfAKindValue, pairValue);
+      return new FullHouseResult(threeOfAKindValue);
     }
     return new FullHouseResult();
   }
 
   @Override
   public FlushResult isFlush(String[] cards) {
-    return new FlushResult(hasSameSuit(cards));
+    if (hasSameSuit(cards)) {
+      List<Integer> ordered = orderCardsByValue(cards);
+      return new FlushResult(ordered.get(0), ordered.get(1), ordered.get(2), ordered.get(3), ordered.get(4));
+    }
+    return new FlushResult();
   }
 
   @Override
@@ -147,9 +162,9 @@ public class PokerRuleServiceImpl implements IPokerRuleService {
     return CardValueEnum.getValue(getCardSymbol(card));
   }
 
-  private boolean containsValue(CardValueEnum value, String[] cards) {
+  private boolean containsValue(String[] cards, CardValueEnum value) {
     for (String card : cards) {
-      if (value.getValue() == getCardSymbol(card)) {
+      if (value.getValue() == getCardValue(card)) {
         return true;
       }
     }
@@ -188,7 +203,7 @@ public class PokerRuleServiceImpl implements IPokerRuleService {
 
   private List<Integer> orderCardsByValue(String[] cards, Integer... excludeValue) {
     Stream<String> stream = Arrays.stream(cards);
-    if (excludeValue != null) {
+    if (excludeValue != null && excludeValue.length > 0) {
       List<Integer> excludeValueList = Arrays.asList(excludeValue);
       stream = stream.filter(card -> !excludeValueList.contains(getCardValue(card)));
     }
