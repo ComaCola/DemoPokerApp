@@ -3,7 +3,7 @@ package com.demo.poker.service;
 import com.demo.poker.model.CardValueEnum;
 import org.springframework.stereotype.Service;
 import static com.demo.poker.model.CardValueEnum.*;
-import com.demo.poker.model.SuitEnum;
+import com.demo.poker.model.CardSuitEnum;
 import com.demo.poker.model.rules.FlushResult;
 import com.demo.poker.model.rules.FourOfAKindResult;
 import com.demo.poker.model.rules.FullHouseResult;
@@ -13,7 +13,7 @@ import com.demo.poker.model.rules.RoyalFlushResult;
 import com.demo.poker.model.rules.StraightFlushResult;
 import com.demo.poker.model.rules.StraightResult;
 import com.demo.poker.model.rules.ThreeOfAKindResult;
-import com.demo.poker.model.rules.TwoPairsResult;
+import com.demo.poker.model.rules.TwoPairResult;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -34,7 +34,7 @@ public class PokerRuleServiceImpl implements IPokerRuleService {
     if (hasSameSuit(cards) && containsValue(cards, _10)
             && containsValue(cards, JACK) && containsValue(cards, QUEEN)
             && containsValue(cards, KING) && containsValue(cards, ACE)) {
-      return new RoyalFlushResult(SuitEnum.getSuitValue(getSuit(cards[0])));
+      return new RoyalFlushResult(CardSuitEnum.getSuitValue(getSuit(cards[0])));
     }
     return new RoyalFlushResult();
   }
@@ -112,16 +112,16 @@ public class PokerRuleServiceImpl implements IPokerRuleService {
   }
 
   @Override
-  public TwoPairsResult isTwoPair(String[] cards) {
+  public TwoPairResult isTwoPair(String[] cards) {
     int firstPairValue = hasPair(cards);
     int secondPairValue = hasPair(cards, firstPairValue);
 
     if (firstPairValue > 0 && secondPairValue > 0) {
       int lastCard = getLastCard(cards, firstPairValue, secondPairValue);
-      return new TwoPairsResult(firstPairValue > secondPairValue ? firstPairValue : secondPairValue, firstPairValue < secondPairValue ? firstPairValue : secondPairValue, lastCard);
+      return new TwoPairResult(firstPairValue > secondPairValue ? firstPairValue : secondPairValue, firstPairValue < secondPairValue ? firstPairValue : secondPairValue, lastCard);
     }
 
-    return new TwoPairsResult();
+    return new TwoPairResult();
   }
 
   @Override

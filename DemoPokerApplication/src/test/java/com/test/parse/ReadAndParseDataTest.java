@@ -1,12 +1,13 @@
 package com.test.parse;
 
-
 import com.demo.poker.DemoPokerApplication;
 import com.demo.poker.model.Game;
+import com.demo.poker.model.GameStatistic;
+import com.demo.poker.service.IPokerMatchService;
 import com.demo.poker.utils.Utils;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
@@ -15,6 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest(classes = DemoPokerApplication.class)
 public class ReadAndParseDataTest {
+
+  @Autowired
+  private IPokerMatchService pokerMatchService;
 
   private final String URL_STR = "https://projecteuler.net/project/resources/p054_poker.txt";
 
@@ -29,9 +33,14 @@ public class ReadAndParseDataTest {
 
   @Test
   public void parse() throws Exception {
-    final List<Game> games = new ArrayList<>();
+    final GameStatistic statistic = new GameStatistic();
     List<String> lines = Utils.readData(URL_STR);
-    lines.stream().forEach(line -> games.add(Utils.parseLineAndFillGame(line)));
-    System.out.println(games);
+    lines.stream().forEach(line -> {
+      Game game = Utils.parseLineAndFillGame(line);
+      pokerMatchService.pokerMatch(game);
+      statistic.addGame(game);
+
+    });
+    System.out.println(statistic.makeStatistic());
   }
 }

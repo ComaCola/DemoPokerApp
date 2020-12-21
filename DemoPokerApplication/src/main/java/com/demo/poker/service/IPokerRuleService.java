@@ -9,7 +9,7 @@ import com.demo.poker.model.rules.RoyalFlushResult;
 import com.demo.poker.model.rules.StraightFlushResult;
 import com.demo.poker.model.rules.StraightResult;
 import com.demo.poker.model.rules.ThreeOfAKindResult;
-import com.demo.poker.model.rules.TwoPairsResult;
+import com.demo.poker.model.rules.TwoPairResult;
 
 /**
  *
@@ -31,9 +31,10 @@ public interface IPokerRuleService {
 
   ThreeOfAKindResult isThreeOfAKind(String[] cards);
 
-  TwoPairsResult isTwoPair(String[] args);
+  TwoPairResult isTwoPair(String[] args);
 
   OnePairResult isOnePair(String[] cards);
 
   HighCardResult isHighCard(String[] cards);
+
 }

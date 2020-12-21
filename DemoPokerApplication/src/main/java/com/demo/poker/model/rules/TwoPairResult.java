@@ -9,19 +9,19 @@ import lombok.Data;
  * @author Deividas
  */
 @Data
-public class TwoPairsResult implements Serializable, Comparable<TwoPairsResult> {
+public class TwoPairResult implements Serializable, Comparable<TwoPairResult> {
 
   private final boolean isFull;
   private final int firstPairValue;
   private final int secondPairValue;
   private final int lastCardValue;
 
-  public TwoPairsResult() {
+  public TwoPairResult() {
     isFull = false;
     firstPairValue = secondPairValue = lastCardValue = 0;
   }
 
-  public TwoPairsResult(int first, int second, int last) {
+  public TwoPairResult(int first, int second, int last) {
     isFull = true;
     this.firstPairValue = first;
     this.secondPairValue = second;
@@ -29,11 +29,11 @@ public class TwoPairsResult implements Serializable, Comparable<TwoPairsResult> 
   }
 
   @Override
-  public int compareTo(TwoPairsResult player2Result) {
-    return Comparator.comparing(TwoPairsResult::isFull)
-            .thenComparing(TwoPairsResult::getFirstPairValue)
-            .thenComparing(TwoPairsResult::getSecondPairValue)
-            .thenComparing(TwoPairsResult::getLastCardValue)
+  public int compareTo(TwoPairResult player2Result) {
+    return Comparator.comparing(TwoPairResult::isFull)
+            .thenComparing(TwoPairResult::getFirstPairValue)
+            .thenComparing(TwoPairResult::getSecondPairValue)
+            .thenComparing(TwoPairResult::getLastCardValue)
             .compare(this, player2Result);
   }
 

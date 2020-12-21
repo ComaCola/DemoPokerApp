@@ -1,7 +1,7 @@
 package com.test.rules;
 
 import com.demo.poker.DemoPokerApplication;
-import com.demo.poker.model.rules.TwoPairsResult;
+import com.demo.poker.model.rules.TwoPairResult;
 import com.demo.poker.service.IPokerRuleService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,34 +32,34 @@ public class TwoPairsRuleTest {
 
   @Test
   public void notTwoPairsResultTest() {
-    TwoPairsResult result = service.isTwoPair(new String[]{"QH", "QC", "QS", "2S", "4D"});
+    TwoPairResult result = service.isTwoPair(new String[]{"QH", "QC", "QS", "2S", "4D"});
     Assertions.assertFalse(result.isFull());
   }
 
   @Test
   public void twoPairsResultTest() {
-    TwoPairsResult result = service.isTwoPair(new String[]{"QH", "QC", "AS", "2S", "2D"});
+    TwoPairResult result = service.isTwoPair(new String[]{"QH", "QC", "AS", "2S", "2D"});
     Assertions.assertTrue(result.isFull());
   }
 
   @Test
   public void player1WinsTest() {
-    TwoPairsResult player1Result = service.isTwoPair(new String[]{"QH", "QC", "KS", "TS", "KD"});
-    TwoPairsResult player2Result = service.isTwoPair(new String[]{"AH", "8C", "8S", "2S", "2D"});
+    TwoPairResult player1Result = service.isTwoPair(new String[]{"QH", "QC", "KS", "TS", "KD"});
+    TwoPairResult player2Result = service.isTwoPair(new String[]{"AH", "8C", "8S", "2S", "2D"});
     Assertions.assertTrue(player1Result.compareTo(player2Result) > 0); // player2 wins
   }
 
   @Test
   public void player1WinsWithLastCardTest() {
-    TwoPairsResult player1Result = service.isTwoPair(new String[]{"QH", "QC", "KS", "TS", "KD"});
-    TwoPairsResult player2Result = service.isTwoPair(new String[]{"QS", "8C", "KH", "KC", "QD"});
+    TwoPairResult player1Result = service.isTwoPair(new String[]{"QH", "QC", "KS", "TS", "KD"});
+    TwoPairResult player2Result = service.isTwoPair(new String[]{"QS", "8C", "KH", "KC", "QD"});
     Assertions.assertTrue(player1Result.compareTo(player2Result) > 0); // player2 wins
   }
 
   @Test
   public void player2WinsTest() {
-    TwoPairsResult player1Result = service.isTwoPair(new String[]{"QH", "QC", "KS", "5S", "5D"});
-    TwoPairsResult player2Result = service.isTwoPair(new String[]{"QH", "2C", "2S", "AS", "AD"});
+    TwoPairResult player1Result = service.isTwoPair(new String[]{"QH", "QC", "KS", "5S", "5D"});
+    TwoPairResult player2Result = service.isTwoPair(new String[]{"QH", "2C", "2S", "AS", "AD"});
     Assertions.assertTrue(player1Result.compareTo(player2Result) < 0); // player2 wins
   }
 }

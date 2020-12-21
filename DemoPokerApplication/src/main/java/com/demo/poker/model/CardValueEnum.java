@@ -38,10 +38,6 @@ public enum CardValueEnum {
     this.value = value;
   }
 
-  public char getSymbol() {
-    return symbol;
-  }
-
   public int getValue() {
     return value;
   }
