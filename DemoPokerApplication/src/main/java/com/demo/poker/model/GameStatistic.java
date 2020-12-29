@@ -22,6 +22,10 @@ public class GameStatistic implements Serializable {
     gameList.add(game);
   }
 
+  public int getTotalGames() {
+    return gameList.size();
+  }
+
   public String makeStatistic() {
     gameList.forEach(game -> {
       if (game.isPlayer1Wins()) {

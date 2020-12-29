@@ -7,15 +7,15 @@ package com.demo.poker.model;
 public enum PokerRuleEnum {
 
   ROYAL_FLUSH("Royal flush"),
-  STRAIGHT_FLUSH("straight flush"),
-  FOUR_OF_A_KIND("fout of a kind"),
-  FULL_HOUSE("full house"),
-  FLUSH("flush"),
-  STRAIGHT("straight"),
-  THREE_OF_A_KIND("three of a kind"),
-  TWO_PAIR("two pair"),
-  ONE_PAIR("one pair"),
-  HIGH_CARD("high card");
+  STRAIGHT_FLUSH("Straight flush"),
+  FOUR_OF_A_KIND("Four of a kind"),
+  FULL_HOUSE("Full house"),
+  FLUSH("Flush"),
+  STRAIGHT("Straight"),
+  THREE_OF_A_KIND("Three of a kind"),
+  TWO_PAIR("Two pair"),
+  ONE_PAIR("One pair"),
+  HIGH_CARD("High card");
 
   private final String value;
 

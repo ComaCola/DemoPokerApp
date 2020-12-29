@@ -5,17 +5,14 @@ import com.demo.poker.model.rules.FullHouseResult;
 import com.demo.poker.service.IPokerRuleService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
  * @author Deividas
  */
 @SpringBootTest(classes = DemoPokerApplication.class)
-@RunWith(SpringRunner.class)
 public class FullHouseRuleTest {
 
   @Autowired

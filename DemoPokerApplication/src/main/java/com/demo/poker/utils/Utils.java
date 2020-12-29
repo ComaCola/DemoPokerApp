@@ -33,7 +33,7 @@ public class Utils {
   }
 
   public static Game parseLineAndFillGame(String line) {
-    String[] cards = line.split(" ");
+    String[] cards = line.split("\\W+");
     Player player1 = new Player(Arrays.copyOfRange(cards, 0, 5));
     Player player2 = new Player(Arrays.copyOfRange(cards, 5, 10));
     return new Game(player1, player2);
