@@ -11,24 +11,24 @@ import lombok.Data;
 @Data
 public class FourOfAKindResult implements Serializable, Comparable<FourOfAKindResult> {
 
-  private final boolean isFull;
-  private int fourOfAKindValue;      // card value
+    private final boolean isFull;
+    private Integer fourOfAKindValue;      // card value
 
-  public FourOfAKindResult() {
-    isFull = false;
-    fourOfAKindValue = 0;
-  }
+    public FourOfAKindResult() {
+        isFull = false;
+        fourOfAKindValue = null;
+    }
 
-  public FourOfAKindResult(int fourOfAKindValue) {
-    isFull = true;
-    this.fourOfAKindValue = fourOfAKindValue;
-  }
+    public FourOfAKindResult(Integer fourOfAKindSuit) {
+        isFull = true;
+        this.fourOfAKindValue = fourOfAKindSuit;
+    }
 
-  @Override
-  public int compareTo(FourOfAKindResult player2) {
-    return Comparator.comparing(FourOfAKindResult::isFull)
-            .thenComparing(FourOfAKindResult::getFourOfAKindValue)
-            .compare(this, player2);
-  }
+    @Override
+    public int compareTo(FourOfAKindResult player2) {
+        return Comparator.comparing(FourOfAKindResult::isFull)
+                .thenComparing(FourOfAKindResult::getFourOfAKindValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .compare(this, player2);
+    }
 
 }

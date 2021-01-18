@@ -1,9 +1,7 @@
 package com.demo.poker.service;
 
-import com.demo.poker.model.CardValueEnum;
+import com.demo.poker.model.Card;
 import org.springframework.stereotype.Service;
-import static com.demo.poker.model.CardValueEnum.*;
-import com.demo.poker.model.CardSuitEnum;
 import com.demo.poker.model.rules.FlushResult;
 import com.demo.poker.model.rules.FourOfAKindResult;
 import com.demo.poker.model.rules.FullHouseResult;
@@ -29,196 +27,193 @@ import java.util.stream.Stream;
 @Service
 public class PokerRuleServiceImpl implements IPokerRuleService {
 
-  @Override
-  public RoyalFlushResult isRoyalFlush(String[] cards) {
-    if (hasSameSuit(cards) && containsValue(cards, _10)
-            && containsValue(cards, JACK) && containsValue(cards, QUEEN)
-            && containsValue(cards, KING) && containsValue(cards, ACE)) {
-      return new RoyalFlushResult(CardSuitEnum.getSuitValue(getSuit(cards[0])));
-    }
-    return new RoyalFlushResult();
-  }
-
-  @Override
-  public StraightFlushResult isStraightFlush(String[] cards) {
-    if (hasSameSuit(cards)) {
-      StraightResult straight = isStraight(cards);
-      if (straight.isFull()) {
-        return new StraightFlushResult(straight.getHighestCardValue());
-      }
-    }
-    return new StraightFlushResult();
-  }
-
-  @Override
-  public FourOfAKindResult isFourOfAKind(String[] cards) {
-    Map<Character, Long> valuesMap = Arrays.stream(cards).map(card -> getCardSymbol(card)).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-    if (valuesMap.size() == 2 && valuesMap.containsValue(4L)) {
-      char kind = valuesMap.entrySet().stream().filter(entry -> entry.getValue() == 4).findFirst().get().getKey();
-      int value = CardValueEnum.getValue(kind);
-      FourOfAKindResult result = new FourOfAKindResult(value);
-      return result;
-    }
-    return new FourOfAKindResult();
-  }
-
-  @Override
-  public FullHouseResult isFullHouse(String[] cards) {
-    int threeOfAKindValue = hasThreeOfAKind(cards);
-    int pairValue = hasPair(cards);
-    if (threeOfAKindValue > 0 && pairValue > 0) {
-      return new FullHouseResult(threeOfAKindValue);
-    }
-    return new FullHouseResult();
-  }
-
-  @Override
-  public FlushResult isFlush(String[] cards) {
-    if (hasSameSuit(cards)) {
-      List<Integer> ordered = orderCardsByValue(cards);
-      return new FlushResult(ordered.get(0), ordered.get(1), ordered.get(2), ordered.get(3), ordered.get(4));
-    }
-    return new FlushResult();
-  }
-
-  @Override
-  public StraightResult isStraight(String[] cards) {
-    List<Integer> ordered = orderCardsByValue(cards);
-    if (ordered.contains(CardValueEnum.ACE.getValue())) {
-      ordered.remove(Integer.valueOf(CardValueEnum.ACE.getValue()));
-    }
-    if (isInRow(ordered)) {
-      if (ordered.size() == 5) {
-        return new StraightResult(ordered.get(0));
-      }
-      if (ordered.size() == 4) {
-        if (ordered.get(0) == CardValueEnum.KING.getValue()) {
-          return new StraightResult(CardValueEnum.ACE.getValue());
-        } else if (ordered.get(0) == CardValueEnum._5.getValue()) {
-          return new StraightResult(CardValueEnum._5.getValue());
+    @Override
+    public RoyalFlushResult getRoyalFlushResult(Card[] cards) {
+        if (hasSameSuit(cards)) {
+            String suitString = cards[0].getCode().substring(1);
+            if (containsValue(cards, Card.getCardByCode("T" + suitString))
+                    && containsValue(cards, Card.getCardByCode("J" + suitString))
+                    && containsValue(cards, Card.getCardByCode("Q" + suitString))
+                    && containsValue(cards, Card.getCardByCode("K" + suitString))
+                    && containsValue(cards, Card.getCardByCode("A" + suitString))) {
+                return new RoyalFlushResult(cards[0].getSuit());
+            }
         }
-      }
-    }
-    return new StraightResult();
-  }
-
-  @Override
-  public ThreeOfAKindResult isThreeOfAKind(String[] cards) {
-    int threeOfAKindValue = hasThreeOfAKind(cards);
-    if (threeOfAKindValue > 0) {
-      return new ThreeOfAKindResult(threeOfAKindValue);
-    }
-    return new ThreeOfAKindResult();
-  }
-
-  @Override
-  public TwoPairResult isTwoPair(String[] cards) {
-    int firstPairValue = hasPair(cards);
-    int secondPairValue = hasPair(cards, firstPairValue);
-
-    if (firstPairValue > 0 && secondPairValue > 0) {
-      int lastCard = getLastCard(cards, firstPairValue, secondPairValue);
-      return new TwoPairResult(firstPairValue > secondPairValue ? firstPairValue : secondPairValue, firstPairValue < secondPairValue ? firstPairValue : secondPairValue, lastCard);
+        return new RoyalFlushResult();
     }
 
-    return new TwoPairResult();
-  }
-
-  @Override
-  public OnePairResult isOnePair(String[] cards) {
-    int pairValue = hasPair(cards);
-    if (pairValue > 0) {
-      List<Integer> orderedCardsValue = orderCardsByValue(cards, pairValue);
-      return new OnePairResult(pairValue, orderedCardsValue.get(0), orderedCardsValue.get(1), orderedCardsValue.get(2));
+    @Override
+    public StraightFlushResult getStraightFlushResult(Card[] cards) {
+        if (hasSameSuit(cards)) {
+            StraightResult straight = getStraightResult(cards);
+            if (straight.isFull()) {
+                return new StraightFlushResult(straight.getHighestCardValue());
+            }
+        }
+        return new StraightFlushResult();
     }
-    return new OnePairResult();
-  }
 
-  @Override
-  public HighCardResult isHighCard(String[] cards) {
-    List<Integer> ordered = orderCardsByValue(cards);
-    return new HighCardResult(ordered.get(0), ordered.get(1), ordered.get(2), ordered.get(3), ordered.get(4));
-  }
-
-  private boolean hasSameSuit(String[] cards) {
-    char s = getSuit(cards[0]);
-    for (int i = 1; i < cards.length; i++) {
-      if (s != getSuit(cards[i])) {
-        return false;
-      }
+    @Override
+    public FourOfAKindResult getFourOfAKindResult(Card[] cards) {
+        Map<Integer, Long> valuesMap = Arrays.stream(cards).map(card -> card.getValue()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        if (valuesMap.size() == 2 && valuesMap.containsValue(4L)) {
+            Integer fourOfAKindValue = valuesMap.entrySet().stream().filter(entry -> entry.getValue() == 4).findFirst().get().getKey();
+            FourOfAKindResult result = new FourOfAKindResult(fourOfAKindValue);
+            return result;
+        }
+        return new FourOfAKindResult();
     }
-    return true;
-  }
 
-  private char getSuit(String card) {
-    return card.charAt(1);
-  }
+    @Override
+    public FullHouseResult getFullHouseResult(Card[] cards) {
+        Integer threeOfAKindValue = getThreeOfAKindValue(cards);
+        Integer pairValue = getPairValue(cards);
+        if (threeOfAKindValue != null && pairValue != null) {
+            return new FullHouseResult(threeOfAKindValue, pairValue);
+        }
+        return new FullHouseResult();
+    }
 
-  private char getCardSymbol(String card) {
-    return card.charAt(0);
-  }
+    @Override
+    public FlushResult getFlushResult(Card[] cards) {
+        if (hasSameSuit(cards)) {
+            List<Card> ordered = orderCardsByValue(cards);
+            return new FlushResult(ordered.get(4).getValue(), ordered.get(3).getValue(), ordered.get(2).getValue(), ordered.get(1).getValue(), ordered.get(0).getValue(), ordered.get(0).getSuit());
+        }
+        return new FlushResult();
+    }
 
-  private int getCardValue(String card) {
-    return CardValueEnum.getValue(getCardSymbol(card));
-  }
+    @Override
+    public StraightResult getStraightResult(Card[] cards) {
+        List<Card> ordered = orderCardsByValue(cards);
+        if (ordered.contains(Card.CLUBS_ACE)) {
+            ordered.remove(Card.CLUBS_ACE);
+        } else if (ordered.contains(Card.DIAMONDS_ACE)) {
+            ordered.remove(Card.DIAMONDS_ACE);
+        } else if (ordered.contains(Card.HEARTS_ACE)) {
+            ordered.remove(Card.HEARTS_ACE);
+        } else if (ordered.contains(Card.SPADES_ACE)) {
+            ordered.remove(Card.SPADES_ACE);
+        }
+        if (isInRow(ordered)) {
+            if (ordered.size() == 5) {
+                return new StraightResult(ordered.get(0).getValue());
+            }
+            if (ordered.size() == 4) {
+                if (ordered.get(3).getValue() == Card.CLUBS_KING.getValue()) {
+                    return new StraightResult(Card.CLUBS_ACE.getValue());
+                } else if (ordered.get(3).getValue() == Card.CLUBS_5.getValue()) {
+                    return new StraightResult(Card.CLUBS_5.getValue());
+                }
+            }
+        }
+        return new StraightResult();
+    }
 
-  private boolean containsValue(String[] cards, CardValueEnum value) {
-    for (String card : cards) {
-      if (value.getValue() == getCardValue(card)) {
+    @Override
+    public ThreeOfAKindResult getThreeOfAKindResult(Card[] cards) {
+        Integer threeOfAKindValue = getThreeOfAKindValue(cards);
+        if (threeOfAKindValue != null) {
+            return new ThreeOfAKindResult(threeOfAKindValue);
+        }
+        return new ThreeOfAKindResult();
+    }
+
+    @Override
+    public TwoPairResult getTwoPairResult(Card[] cards) {
+        Integer firstPairValue = getPairValue(cards);
+        Integer secondPairValue = getPairValue(cards, firstPairValue);
+
+        if (firstPairValue != null && secondPairValue != null) {
+            Card lastCard = getLastCard(cards, firstPairValue, secondPairValue);
+            return new TwoPairResult(firstPairValue > secondPairValue ? firstPairValue : secondPairValue, firstPairValue < secondPairValue ? firstPairValue : secondPairValue, lastCard.getValue());
+        }
+
+        return new TwoPairResult();
+    }
+
+    @Override
+    public OnePairResult getOnePairResult(Card[] cards) {
+        Integer pairValue = getPairValue(cards);
+        if (pairValue != null) {
+            List<Card> ordered = orderCardsByValue(cards, pairValue);
+            return new OnePairResult(pairValue, ordered.get(2).getValue(), ordered.get(1).getValue(), ordered.get(0).getValue());
+        }
+        return new OnePairResult();
+    }
+
+    @Override
+    public HighCardResult getHighCardResult(Card[] cards) {
+        List<Card> ordered = orderCardsByValue(cards);
+        return new HighCardResult(ordered.get(4).getValue(), ordered.get(3).getValue(), ordered.get(2).getValue(), ordered.get(1).getValue(), ordered.get(0).getValue());
+    }
+
+    private boolean hasSameSuit(Card[] cards) {
+        int cardSuit = cards[0].getSuit();
+        for (int i = 1; i < cards.length; i++) {
+            if (cardSuit != cards[i].getSuit()) {
+                return false;
+            }
+        }
         return true;
-      }
     }
-    return false;
-  }
 
-  private int hasThreeOfAKind(String[] cards) {
-    Map<Character, Long> valuesMap = Arrays.stream(cards).map(card -> getCardSymbol(card)).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-    if (valuesMap.containsValue(3L)) {
-      char threeOfAKindSymbol = valuesMap.entrySet().stream().filter(entry -> entry.getValue() == 3).findFirst().get().getKey();
-      return CardValueEnum.getValue(threeOfAKindSymbol);
-    }
-    return 0;
-  }
-
-  private int hasPair(String[] cards) {
-    return hasPair(cards, 0);
-  }
-
-  private int hasPair(String[] cards, int excludeValue) {
-    Map<Character, Long> valuesMap = Arrays.stream(cards).filter(card -> excludeValue == 0 || (excludeValue != 0 && excludeValue != getCardValue(card))).map(card -> getCardSymbol(card)).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-    if (valuesMap.containsValue(2L)) {
-      char pairSymbol = valuesMap.entrySet().stream().filter(entry -> entry.getValue() == 2).findFirst().get().getKey();
-      return CardValueEnum.getValue(pairSymbol);
-    }
-    return 0;
-  }
-
-  private int getLastCard(String[] cards, int firstPairValue, int secondPairValue) {
-    String lastCard = Arrays.stream(cards).filter(card -> {
-      int value = getCardValue(card);
-      return value != firstPairValue && value != secondPairValue;
-    }).findFirst().get();
-    return getCardValue(lastCard);
-  }
-
-  private List<Integer> orderCardsByValue(String[] cards, Integer... excludeValue) {
-    Stream<String> stream = Arrays.stream(cards);
-    if (excludeValue != null && excludeValue.length > 0) {
-      List<Integer> excludeValueList = Arrays.asList(excludeValue);
-      stream = stream.filter(card -> !excludeValueList.contains(getCardValue(card)));
-    }
-    return stream.map(card -> getCardValue(card)).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-  }
-
-  private boolean isInRow(List<Integer> list) {
-    if (list.size() < 4) {
-      return false;
-    }
-    for (int i = 0; i < list.size() - 2; i++) {
-      if (list.get(i) - 1 != list.get(i + 1)) {
+    private boolean containsValue(Card[] cards, Card isThisCard) {
+        for (Card card : cards) {
+            if (isThisCard == card) {
+                return true;
+            }
+        }
         return false;
-      }
     }
-    return true;
-  }
+
+    private Integer getThreeOfAKindValue(Card[] cards) {
+        Map<Integer, Long> valuesMap = Arrays.stream(cards).map(card -> card.getValue()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        if (valuesMap.containsValue(3L)) {
+            Integer threeOfAKindValue = valuesMap.entrySet().stream().filter(entry -> entry.getValue() == 3).findFirst().get().getKey();
+            return threeOfAKindValue;
+        }
+        return null;
+    }
+
+    private Integer getPairValue(Card[] cards) {
+        return getPairValue(cards, null);
+    }
+
+    private Integer getPairValue(Card[] cards, Integer excludeCardValue) {
+        Map<Integer, Long> valuesMap = Arrays.stream(cards).filter(card -> excludeCardValue == null || excludeCardValue != card.getValue()).map(card -> card.getValue()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        if (valuesMap.containsValue(2L)) {
+            int pairValue = valuesMap.entrySet().stream().filter(entry -> entry.getValue() == 2).findFirst().get().getKey();
+            return pairValue;
+        }
+        return null;
+    }
+
+    private Card getLastCard(Card[] cards, Integer firstPairValue, Integer secondPairValue) {
+        Card lastCard = Arrays.stream(cards).filter(card -> {
+            return card.getValue() != firstPairValue && card.getValue() != secondPairValue;
+        }).findFirst().get();
+        return lastCard;
+    }
+
+    private List<Card> orderCardsByValue(Card[] cards, Integer... excludeValue) {
+        Stream<Card> cardStreamTemp = Arrays.stream(cards);
+        if (excludeValue != null && excludeValue.length > 0) {
+            List<Integer> excludeValueList = Arrays.asList(excludeValue);
+            cardStreamTemp = cardStreamTemp.filter(card -> !excludeValueList.contains(card.getValue()));
+        }
+        return cardStreamTemp.sorted(Comparator.comparing(Card::getValue).thenComparing(Card::getSuit)).collect(Collectors.toList());
+    }
+
+    private boolean isInRow(List<Card> cards) {
+        if (cards.size() < 4) {
+            return false;
+        }
+        for (int i = 0; i < cards.size() - 2; i++) {
+            if (cards.get(i).getValue() + 1 != cards.get(i + 1).getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

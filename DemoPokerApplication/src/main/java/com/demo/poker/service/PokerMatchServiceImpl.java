@@ -33,8 +33,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void royalFlushMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.ROYAL_FLUSH);
 
-    RoyalFlushResult royalFlushResult1 = pokerRuleService.isRoyalFlush(game.getPlayer1().getCards());
-    RoyalFlushResult royalFlushResult2 = pokerRuleService.isRoyalFlush(game.getPlayer2().getCards());
+    RoyalFlushResult royalFlushResult1 = pokerRuleService.getRoyalFlushResult(game.getPlayer1().getCards());
+    RoyalFlushResult royalFlushResult2 = pokerRuleService.getRoyalFlushResult(game.getPlayer2().getCards());
 
     int result = royalFlushResult1.compareTo(royalFlushResult2);
     switch (result) {
@@ -53,8 +53,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void straightFlushMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.STRAIGHT_FLUSH);
 
-    StraightFlushResult result1 = pokerRuleService.isStraightFlush(game.getPlayer1().getCards());
-    StraightFlushResult result2 = pokerRuleService.isStraightFlush(game.getPlayer2().getCards());
+    StraightFlushResult result1 = pokerRuleService.getStraightFlushResult(game.getPlayer1().getCards());
+    StraightFlushResult result2 = pokerRuleService.getStraightFlushResult(game.getPlayer2().getCards());
 
     int result = result1.compareTo(result2);
     switch (result) {
@@ -73,8 +73,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void fourOfAKindMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.FOUR_OF_A_KIND);
 
-    FourOfAKindResult result1 = pokerRuleService.isFourOfAKind(game.getPlayer1().getCards());
-    FourOfAKindResult result2 = pokerRuleService.isFourOfAKind(game.getPlayer2().getCards());
+    FourOfAKindResult result1 = pokerRuleService.getFourOfAKindResult(game.getPlayer1().getCards());
+    FourOfAKindResult result2 = pokerRuleService.getFourOfAKindResult(game.getPlayer2().getCards());
 
     int result = result1.compareTo(result2);
     switch (result) {
@@ -93,8 +93,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void fullHouseMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.FULL_HOUSE);
 
-    FullHouseResult result1 = pokerRuleService.isFullHouse(game.getPlayer1().getCards());
-    FullHouseResult result2 = pokerRuleService.isFullHouse(game.getPlayer2().getCards());
+    FullHouseResult result1 = pokerRuleService.getFullHouseResult(game.getPlayer1().getCards());
+    FullHouseResult result2 = pokerRuleService.getFullHouseResult(game.getPlayer2().getCards());
 
     int result = result1.compareTo(result2);
     switch (result) {
@@ -113,8 +113,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void flushMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.FLUSH);
 
-    FlushResult result1 = pokerRuleService.isFlush(game.getPlayer1().getCards());
-    FlushResult result2 = pokerRuleService.isFlush(game.getPlayer2().getCards());
+    FlushResult result1 = pokerRuleService.getFlushResult(game.getPlayer1().getCards());
+    FlushResult result2 = pokerRuleService.getFlushResult(game.getPlayer2().getCards());
 
     int result = result1.compareTo(result2);
     switch (result) {
@@ -133,8 +133,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void straightMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.STRAIGHT);
 
-    StraightResult result1 = pokerRuleService.isStraight(game.getPlayer1().getCards());
-    StraightResult result2 = pokerRuleService.isStraight(game.getPlayer2().getCards());
+    StraightResult result1 = pokerRuleService.getStraightResult(game.getPlayer1().getCards());
+    StraightResult result2 = pokerRuleService.getStraightResult(game.getPlayer2().getCards());
 
     int result = result1.compareTo(result2);
     switch (result) {
@@ -153,8 +153,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void threeOfAKindMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.THREE_OF_A_KIND);
 
-    ThreeOfAKindResult result1 = pokerRuleService.isThreeOfAKind(game.getPlayer1().getCards());
-    ThreeOfAKindResult result2 = pokerRuleService.isThreeOfAKind(game.getPlayer2().getCards());
+    ThreeOfAKindResult result1 = pokerRuleService.getThreeOfAKindResult(game.getPlayer1().getCards());
+    ThreeOfAKindResult result2 = pokerRuleService.getThreeOfAKindResult(game.getPlayer2().getCards());
 
     int result = result1.compareTo(result2);
     switch (result) {
@@ -173,8 +173,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void twoPairMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.TWO_PAIR);
 
-    TwoPairResult result1 = pokerRuleService.isTwoPair(game.getPlayer1().getCards());
-    TwoPairResult result2 = pokerRuleService.isTwoPair(game.getPlayer2().getCards());
+    TwoPairResult result1 = pokerRuleService.getTwoPairResult(game.getPlayer1().getCards());
+    TwoPairResult result2 = pokerRuleService.getTwoPairResult(game.getPlayer2().getCards());
 
     int result = result1.compareTo(result2);
     switch (result) {
@@ -193,8 +193,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void onePairMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.ONE_PAIR);
 
-    OnePairResult result1 = pokerRuleService.isOnePair(game.getPlayer1().getCards());
-    OnePairResult result2 = pokerRuleService.isOnePair(game.getPlayer2().getCards());
+    OnePairResult result1 = pokerRuleService.getOnePairResult(game.getPlayer1().getCards());
+    OnePairResult result2 = pokerRuleService.getOnePairResult(game.getPlayer2().getCards());
 
     int result = result1.compareTo(result2);
     switch (result) {
@@ -213,8 +213,8 @@ public class PokerMatchServiceImpl implements IPokerMatchService {
   private void highCardMatch(Game game) {
     game.setPokerRule(PokerRuleEnum.HIGH_CARD);
 
-    HighCardResult result1 = pokerRuleService.isHighCard(game.getPlayer1().getCards());
-    HighCardResult result2 = pokerRuleService.isHighCard(game.getPlayer2().getCards());
+    HighCardResult result1 = pokerRuleService.getHighCardResult(game.getPlayer1().getCards());
+    HighCardResult result2 = pokerRuleService.getHighCardResult(game.getPlayer2().getCards());
 
     int result = result1.compareTo(result2);
     switch (result) {

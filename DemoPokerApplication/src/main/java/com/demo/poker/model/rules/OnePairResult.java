@@ -11,33 +11,33 @@ import lombok.Data;
 @Data
 public class OnePairResult implements Serializable, Comparable<OnePairResult> {
 
-  private final boolean isFull;
-  private final int pairValue;
-  private final int thirdCardValue;
-  private final int fourthCardValue;
-  private final int fifthCardValue;
+    private final boolean isFull;
+    private final Integer pairValue;
+    private final Integer thirdCardValue;
+    private final Integer fourthCardValue;
+    private final Integer fifthCardValue;
 
-  public OnePairResult() {
-    isFull = false;
-    pairValue = thirdCardValue = fourthCardValue = fifthCardValue = 0;
-  }
+    public OnePairResult() {
+        isFull = false;
+        pairValue = thirdCardValue = fourthCardValue = fifthCardValue = null;
+    }
 
-  public OnePairResult(int pairValue, int thirdCardValue, int fourthCardValue, int fifthCardValue) {
-    this.isFull = true;
-    this.pairValue = pairValue;
-    this.thirdCardValue = thirdCardValue;
-    this.fourthCardValue = fourthCardValue;
-    this.fifthCardValue = fifthCardValue;
-  }
+    public OnePairResult(Integer pairValue, Integer thirdCardValue, Integer fourthCardValue, Integer fifthCardValue) {
+        this.isFull = true;
+        this.pairValue = pairValue;
+        this.thirdCardValue = thirdCardValue;
+        this.fourthCardValue = fourthCardValue;
+        this.fifthCardValue = fifthCardValue;
+    }
 
-  @Override
-  public int compareTo(OnePairResult player2Result) {
-    return Comparator.comparing(OnePairResult::isFull)
-            .thenComparing(OnePairResult::getPairValue)
-            .thenComparing(OnePairResult::getThirdCardValue)
-            .thenComparing(OnePairResult::getFourthCardValue)
-            .thenComparing(OnePairResult::getFifthCardValue)
-            .compare(this, player2Result);
-  }
+    @Override
+    public int compareTo(OnePairResult player2Result) {
+        return Comparator.comparing(OnePairResult::isFull)
+                .thenComparing(OnePairResult::getPairValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(OnePairResult::getThirdCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(OnePairResult::getFourthCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(OnePairResult::getFifthCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .compare(this, player2Result);
+    }
 
 }

@@ -11,30 +11,30 @@ import lombok.Data;
 @Data
 public class TwoPairResult implements Serializable, Comparable<TwoPairResult> {
 
-  private final boolean isFull;
-  private final int firstPairValue;
-  private final int secondPairValue;
-  private final int lastCardValue;
+    private final boolean isFull;
+    private final Integer firstPairValue;
+    private final Integer secondPairValue;
+    private final Integer lastCardValue;
 
-  public TwoPairResult() {
-    isFull = false;
-    firstPairValue = secondPairValue = lastCardValue = 0;
-  }
+    public TwoPairResult() {
+        isFull = false;
+        firstPairValue = secondPairValue = lastCardValue = null;
+    }
 
-  public TwoPairResult(int first, int second, int last) {
-    isFull = true;
-    this.firstPairValue = first;
-    this.secondPairValue = second;
-    this.lastCardValue = last;
-  }
+    public TwoPairResult(Integer first, Integer second, Integer last) {
+        isFull = true;
+        this.firstPairValue = first;
+        this.secondPairValue = second;
+        this.lastCardValue = last;
+    }
 
-  @Override
-  public int compareTo(TwoPairResult player2Result) {
-    return Comparator.comparing(TwoPairResult::isFull)
-            .thenComparing(TwoPairResult::getFirstPairValue)
-            .thenComparing(TwoPairResult::getSecondPairValue)
-            .thenComparing(TwoPairResult::getLastCardValue)
-            .compare(this, player2Result);
-  }
+    @Override
+    public int compareTo(TwoPairResult player2Result) {
+        return Comparator.comparing(TwoPairResult::isFull)
+                .thenComparing(TwoPairResult::getFirstPairValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(TwoPairResult::getSecondPairValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(TwoPairResult::getLastCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .compare(this, player2Result);
+    }
 
 }

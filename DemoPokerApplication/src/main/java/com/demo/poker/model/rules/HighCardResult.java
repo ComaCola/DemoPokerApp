@@ -13,20 +13,20 @@ import lombok.Data;
 @AllArgsConstructor
 public class HighCardResult implements Serializable, Comparable<HighCardResult> {
 
-  private final int highestCardValue;
-  private final int secondCardValue;
-  private final int thirdCardValue;
-  private final int fourthCardValue;
-  private final int fifthCardValue;
+    private final Integer highestCardValue;
+    private final Integer secondCardValue;
+    private final Integer thirdCardValue;
+    private final Integer fourthCardValue;
+    private final Integer fifthCardValue;
 
-  @Override
-  public int compareTo(HighCardResult player2Result) {
-    return Comparator.comparing(HighCardResult::getHighestCardValue)
-            .thenComparing(HighCardResult::getSecondCardValue)
-            .thenComparing(HighCardResult::getThirdCardValue)
-            .thenComparing(HighCardResult::getFourthCardValue)
-            .thenComparing(HighCardResult::getFifthCardValue)
-            .compare(this, player2Result);
-  }
+    @Override
+    public int compareTo(HighCardResult player2Result) {
+        return Comparator.comparing(HighCardResult::getHighestCardValue)
+                .thenComparing(HighCardResult::getSecondCardValue)
+                .thenComparing(HighCardResult::getThirdCardValue)
+                .thenComparing(HighCardResult::getFourthCardValue)
+                .thenComparing(HighCardResult::getFifthCardValue)
+                .compare(this, player2Result);
+    }
 
 }

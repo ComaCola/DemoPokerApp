@@ -11,24 +11,27 @@ import lombok.Data;
 @Data
 public class FullHouseResult implements Serializable, Comparable<FullHouseResult> {
 
-  private final boolean isFull;
-  private final int threeOfAKindValue;
+    private final boolean isFull;
+    private final Integer threeOfAKindValue;
+    private final Integer pairValue;
 
-  public FullHouseResult() {
-    isFull = false;
-    threeOfAKindValue = 0;
-  }
+    public FullHouseResult() {
+        isFull = false;
+        threeOfAKindValue = pairValue = null;
+    }
 
-  @Override
-  public int compareTo(FullHouseResult player2) {
-    return Comparator.comparing(FullHouseResult::isFull)
-            .thenComparing(FullHouseResult::getThreeOfAKindValue)
-            .compare(this, player2);
-  }
+    @Override
+    public int compareTo(FullHouseResult player2) {
+        return Comparator.comparing(FullHouseResult::isFull)
+                .thenComparing(FullHouseResult::getThreeOfAKindValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(FullHouseResult::getPairValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .compare(this, player2);
+    }
 
-  public FullHouseResult(int threeOfAKindValue) {
-    isFull = true;
-    this.threeOfAKindValue = threeOfAKindValue;
-  }
+    public FullHouseResult(Integer threeOfAKindValue, Integer pairValue) {
+        isFull = true;
+        this.threeOfAKindValue = threeOfAKindValue;
+        this.pairValue = pairValue;
+    }
 
 }

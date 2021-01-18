@@ -1,6 +1,8 @@
 package com.test.rules;
 
 import com.demo.poker.DemoPokerApplication;
+import com.demo.poker.model.Card;
+import static com.demo.poker.model.Card.*;
 import com.demo.poker.model.rules.FlushResult;
 import com.demo.poker.service.IPokerRuleService;
 import org.junit.jupiter.api.Assertions;
@@ -15,46 +17,47 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = DemoPokerApplication.class)
 public class FlushRuleTest {
 
-  @Autowired
-  private IPokerRuleService service;
+    @Autowired
+    private IPokerRuleService service;
 
-  @Test
-  public void notNullTest() {
-    FlushResult result = service.isFlush(new String[]{"5H", "5C", "7D", "7S", "5D"});
-    Assertions.assertNotNull(result);
-  }
+    @Test
+    public void notNullTest() {
+        FlushResult result = service.getFlushResult(new Card[]{HEARTS_5, CLUBS_5, DIAMONDS_7, SPADES_7, DIAMONDS_5});
+        Assertions.assertNotNull(result);
+    }
 
-  @Test
-  public void noFlushTest() {
-    FlushResult result = service.isFlush(new String[]{"2D", "3D", "5D", "7D", "AS"});
-    Assertions.assertFalse(result.isFull());
-  }
+    @Test
+    public void noFlushTest() {
+        FlushResult result = service.getFlushResult(new Card[]{DIAMONDS_2, DIAMONDS_3, DIAMONDS_5, DIAMONDS_7, SPADES_ACE});
+        Assertions.assertFalse(result.isFull());
+    }
 
-  @Test
-  public void flushTest() {
-    FlushResult result = service.isFlush(new String[]{"2D", "3D", "5D", "7D", "AD"});
-    Assertions.assertTrue(result.isFull());
-  }
+    @Test
+    public void flushTest() {
+        FlushResult result = service.getFlushResult(new Card[]{DIAMONDS_2, DIAMONDS_3, DIAMONDS_5, DIAMONDS_7, DIAMONDS_ACE});
+        Assertions.assertTrue(result.isFull());
+    }
 
-  @Test
-  public void player1WinsTest() {
-    FlushResult player1Result = service.isFlush(new String[]{"2D", "3D", "5D", "7D", "AD"});
-    FlushResult player2Result = service.isFlush(new String[]{"2D", "3D", "5D", "7D", "AS"});
-    Assertions.assertTrue(player1Result.compareTo(player2Result) > 0);
-  }
+    @Test
+    public void player1WinsTest() {
+        FlushResult player1Result = service.getFlushResult(new Card[]{DIAMONDS_2, DIAMONDS_3, DIAMONDS_5, DIAMONDS_7, DIAMONDS_ACE});
+        FlushResult player2Result = service.getFlushResult(new Card[]{DIAMONDS_2, DIAMONDS_3, DIAMONDS_5, DIAMONDS_7, SPADES_ACE});
+        Assertions.assertTrue(player1Result.compareTo(player2Result) > 0);
+    }
 
-  @Test
-  public void bothFlushTest() {
-    FlushResult player1Result = service.isFlush(new String[]{"2D", "3D", "5D", "7D", "AD"});
-    FlushResult player2Result = service.isFlush(new String[]{"2S", "3S", "5S", "7S", "AS"});
-    Assertions.assertTrue(player1Result.isFull());
-    Assertions.assertTrue(player2Result.isFull());
-  }
+    @Test
+    public void bothFlushButSpadesWinsTest() {
+        FlushResult player1Result = service.getFlushResult(new Card[]{DIAMONDS_2, DIAMONDS_3, DIAMONDS_5, DIAMONDS_7, DIAMONDS_ACE});
+        FlushResult player2Result = service.getFlushResult(new Card[]{SPADES_2, SPADES_3, SPADES_5, SPADES_7, SPADES_ACE});
+        Assertions.assertTrue(player1Result.isFull());
+        Assertions.assertTrue(player2Result.isFull());
+        Assertions.assertTrue(player1Result.compareTo(player2Result) < 0);
+    }
 
-  @Test
-  public void bothFlushPlayer2WinsWithLAstCardTest() {
-    FlushResult player1Result = service.isFlush(new String[]{"2D", "3D", "5D", "7D", "KD"});
-    FlushResult player2Result = service.isFlush(new String[]{"2S", "3S", "5S", "7S", "AS"});
-    Assertions.assertTrue(player1Result.compareTo(player2Result) < 0);
-  }
+    @Test
+    public void bothFlushPlayer2WinsWithLastCardTest() {
+        FlushResult player1Result = service.getFlushResult(new Card[]{DIAMONDS_2, DIAMONDS_3, DIAMONDS_5, DIAMONDS_7, DIAMONDS_KING});
+        FlushResult player2Result = service.getFlushResult(new Card[]{SPADES_2, SPADES_3, SPADES_5, SPADES_7, SPADES_ACE});
+        Assertions.assertTrue(player1Result.compareTo(player2Result) < 0);
+    }
 }

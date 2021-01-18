@@ -11,23 +11,23 @@ import lombok.Data;
 @Data
 public class ThreeOfAKindResult implements Serializable, Comparable<ThreeOfAKindResult> {
 
-  private final boolean isFull;
-  private final int threeOfAKindValue;
+    private final boolean isFull;
+    private final Integer threeOfAKindValue;
 
-  public ThreeOfAKindResult() {
-    isFull = false;
-    threeOfAKindValue = 0;
-  }
+    public ThreeOfAKindResult() {
+        isFull = false;
+        threeOfAKindValue = null;
+    }
 
-  public ThreeOfAKindResult(int threeOfAKindValue) {
-    isFull = true;
-    this.threeOfAKindValue = threeOfAKindValue;
-  }
+    public ThreeOfAKindResult(Integer threeOfAKindValue) {
+        isFull = true;
+        this.threeOfAKindValue = threeOfAKindValue;
+    }
 
-  @Override
-  public int compareTo(ThreeOfAKindResult player2Result) {
-    return Comparator.comparing(ThreeOfAKindResult::isFull)
-            .thenComparing(ThreeOfAKindResult::getThreeOfAKindValue)
-            .compare(this, player2Result);
-  }
+    @Override
+    public int compareTo(ThreeOfAKindResult player2Result) {
+        return Comparator.comparing(ThreeOfAKindResult::isFull)
+                .thenComparing(ThreeOfAKindResult::getThreeOfAKindValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .compare(this, player2Result);
+    }
 }

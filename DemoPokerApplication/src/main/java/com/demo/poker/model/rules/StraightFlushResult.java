@@ -8,11 +8,11 @@ import java.io.Serializable;
  */
 public class StraightFlushResult extends StraightResult implements Serializable {
 
-  public StraightFlushResult() {
-  }
+    public StraightFlushResult() {
+    }
 
-  public StraightFlushResult(int highestCardValue) {
-    super(highestCardValue);
-  }
+    public StraightFlushResult(Integer highestCardValue) {
+        super(highestCardValue);
+    }
 
 }

@@ -11,36 +11,39 @@ import lombok.Data;
 @Data
 public class FlushResult implements Serializable, Comparable<FlushResult> {
 
-  private final boolean isFull;
-  private final int highestCardValue;
-  private final int secondCardValue;
-  private final int thirdCardValue;
-  private final int fourthCardValue;
-  private final int fifthCardValue;
+    private final boolean isFull;
+    private final Integer highestCardValue;
+    private final Integer secondCardValue;
+    private final Integer thirdCardValue;
+    private final Integer fourthCardValue;
+    private final Integer fifthCardValue;
+    private final Integer suitValue;
 
-  public FlushResult() {
-    this.isFull = false;
-    highestCardValue = secondCardValue = thirdCardValue = fourthCardValue = fifthCardValue = 0;
-  }
+    public FlushResult() {
+        this.isFull = false;
+        highestCardValue = secondCardValue = thirdCardValue = fourthCardValue = fifthCardValue = suitValue = null;
+    }
 
-  public FlushResult(int highestCardValue, int secondCardValue, int thirdCardValue, int fourthCardValue, int fifthCardValue) {
-    isFull = true;
-    this.highestCardValue = highestCardValue;
-    this.secondCardValue = secondCardValue;
-    this.thirdCardValue = thirdCardValue;
-    this.fourthCardValue = fourthCardValue;
-    this.fifthCardValue = fifthCardValue;
-  }
+    public FlushResult(Integer highestCardValue, Integer secondCardValue, Integer thirdCardValue, Integer fourthCardValue, Integer fifthCardValue, Integer suitValue) {
+        isFull = true;
+        this.highestCardValue = highestCardValue;
+        this.secondCardValue = secondCardValue;
+        this.thirdCardValue = thirdCardValue;
+        this.fourthCardValue = fourthCardValue;
+        this.fifthCardValue = fifthCardValue;
+        this.suitValue = suitValue;
+    }
 
-  @Override
-  public int compareTo(FlushResult player2) {
-    return Comparator.comparing(FlushResult::isFull)
-            .thenComparing(FlushResult::getHighestCardValue)
-            .thenComparing(FlushResult::getSecondCardValue)
-            .thenComparing(FlushResult::getThirdCardValue)
-            .thenComparing(FlushResult::getFourthCardValue)
-            .thenComparing(FlushResult::getFifthCardValue)
-            .compare(this, player2);
-  }
+    @Override
+    public int compareTo(FlushResult player2) {
+        return Comparator.comparing(FlushResult::isFull)
+                .thenComparing(FlushResult::getHighestCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(FlushResult::getSecondCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(FlushResult::getThirdCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(FlushResult::getFourthCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(FlushResult::getFifthCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(FlushResult::getSuitValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .compare(this, player2);
+    }
 
 }

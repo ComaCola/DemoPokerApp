@@ -11,25 +11,25 @@ import lombok.Data;
 @Data
 public class RoyalFlushResult implements Serializable, Comparable<RoyalFlushResult> {
 
-  private final boolean isFull;
-  private final int suitValue;
+    private final boolean isFull;
+    private final Integer cardSuit;
 
-  public RoyalFlushResult() {
-    isFull = false;
-    suitValue = 0;
-  }
+    public RoyalFlushResult() {
+        isFull = false;
+        cardSuit = null;
+    }
 
-  public RoyalFlushResult(int suitValue) {
-    isFull = true;
-    this.suitValue = suitValue;
-  }
+    public RoyalFlushResult(Integer cardSuit) {
+        isFull = true;
+        this.cardSuit = cardSuit;
+    }
 
-  @Override
-  public int compareTo(RoyalFlushResult player2Result) {
-    return Comparator.comparing(RoyalFlushResult::isFull)
-            .thenComparing(RoyalFlushResult::getSuitValue)
-            .compare(this, player2Result);
+    @Override
+    public int compareTo(RoyalFlushResult player2Result) {
+        return Comparator.comparing(RoyalFlushResult::isFull)
+                .thenComparing(RoyalFlushResult::getCardSuit, Comparator.nullsLast(Comparator.naturalOrder()))
+                .compare(this, player2Result);
 
-  }
+    }
 
 }

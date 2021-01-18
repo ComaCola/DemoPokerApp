@@ -1,7 +1,7 @@
 package com.test.rules;
 
 import com.demo.poker.DemoPokerApplication;
-import com.demo.poker.model.CardValueEnum;
+import com.demo.poker.model.Card;
 import com.demo.poker.model.rules.HighCardResult;
 import com.demo.poker.service.IPokerRuleService;
 import org.junit.jupiter.api.Assertions;
@@ -16,41 +16,41 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = DemoPokerApplication.class)
 public class HighCardRuleTest {
 
-  @Autowired
-  private IPokerRuleService service;
+    @Autowired
+    private IPokerRuleService service;
 
-  public HighCardRuleTest() {
-  }
+    public HighCardRuleTest() {
+    }
 
-  @Test
-  public void notNullResultTest() {
-    Assertions.assertNotNull(service.isHighCard(new String[]{"5H", "AC", "6S", "3S", "2D"}));
-    Assertions.assertNotNull(service.isHighCard(new String[]{"5H", "5C", "6S", "5S", "5D"}));
-  }
+    @Test
+    public void notNullResultTest() {
+        Assertions.assertNotNull(service.getHighCardResult(new Card[]{Card.HEARTS_5, Card.CLUBS_ACE, Card.SPADES_6, Card.SPADES_3, Card.DIAMONDS_2}));
+        Assertions.assertNotNull(service.getHighCardResult(new Card[]{Card.HEARTS_5, Card.CLUBS_5, Card.SPADES_6, Card.SPADES_5, Card.DIAMONDS_5}));
+    }
 
-  @Test
-  public void highestCardAceTest() {
-    HighCardResult result = service.isHighCard(new String[]{"5H", "AC", "6S", "3S", "2D"});
-    Assertions.assertTrue(result.getHighestCardValue() == CardValueEnum.ACE.getValue());
-  }
+    @Test
+    public void highestCardAceTest() {
+        HighCardResult result = service.getHighCardResult(new Card[]{Card.HEARTS_5, Card.CLUBS_ACE, Card.SPADES_6, Card.SPADES_3, Card.DIAMONDS_2});
+        Assertions.assertTrue(result.getHighestCardValue() == Card.CLUBS_ACE.getValue());
+    }
 
-  @Test
-  public void highestCard5Test() {
-    HighCardResult result = service.isHighCard(new String[]{"2H", "4C", "2S", "3S", "5D"});
-    Assertions.assertTrue(result.getHighestCardValue() == CardValueEnum._5.getValue());
-  }
+    @Test
+    public void highestCard5Test() {
+        HighCardResult result = service.getHighCardResult(new Card[]{Card.HEARTS_2, Card.CLUBS_4, Card.SPADES_2, Card.SPADES_3, Card.DIAMONDS_5});
+        Assertions.assertTrue(result.getHighestCardValue() == Card.CLUBS_5.getValue());
+    }
 
-  @Test
-  public void player1WinsTest() {
-    HighCardResult player1Result = service.isHighCard(new String[]{"2H", "4C", "9S", "3S", "KD"});
-    HighCardResult player2Result = service.isHighCard(new String[]{"2H", "TC", "QS", "3S", "4D"});
-    Assertions.assertTrue(player1Result.compareTo(player2Result) > 0);
-  }
+    @Test
+    public void player1WinsTest() {
+        HighCardResult player1Result = service.getHighCardResult(new Card[]{Card.HEARTS_2, Card.CLUBS_4, Card.SPADES_9, Card.SPADES_3, Card.DIAMONDS_KING});
+        HighCardResult player2Result = service.getHighCardResult(new Card[]{Card.HEARTS_2, Card.CLUBS_10, Card.SPADES_QUEEN, Card.SPADES_3, Card.DIAMONDS_4});
+        Assertions.assertTrue(player1Result.compareTo(player2Result) > 0);
+    }
 
-  @Test
-  public void player2WinsTest() {
-    HighCardResult player1Result = service.isHighCard(new String[]{"2H", "4C", "9S", "3S", "8D"});
-    HighCardResult player2Result = service.isHighCard(new String[]{"2H", "KC", "QS", "3S", "4D"});
-    Assertions.assertTrue(player1Result.compareTo(player2Result) < 0);
-  }
+    @Test
+    public void player2WinsTest() {
+        HighCardResult player1Result = service.getHighCardResult(new Card[]{Card.HEARTS_2, Card.CLUBS_4, Card.SPADES_9, Card.SPADES_3, Card.DIAMONDS_8});
+        HighCardResult player2Result = service.getHighCardResult(new Card[]{Card.HEARTS_2, Card.CLUBS_KING, Card.SPADES_QUEEN, Card.SPADES_3, Card.DIAMONDS_4});
+        Assertions.assertTrue(player1Result.compareTo(player2Result) < 0);
+    }
 }

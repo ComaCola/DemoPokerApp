@@ -1,6 +1,8 @@
 package com.test.rules;
 
 import com.demo.poker.DemoPokerApplication;
+import com.demo.poker.model.Card;
+import static com.demo.poker.model.Card.*;
 import com.demo.poker.model.rules.FourOfAKindResult;
 import com.demo.poker.service.IPokerRuleService;
 import org.junit.jupiter.api.Assertions;
@@ -15,40 +17,39 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = DemoPokerApplication.class)
 public class FourOfAKindRuleTest {
 
-  @Autowired
-  private IPokerRuleService service;
+    @Autowired
+    private IPokerRuleService service;
 
-  @Test
-  public void notNullResultTest() {
-    Assertions.assertNotNull(service.isFourOfAKind(new String[]{"5H", "5C", "6S", "7S", "KD"}));
-    FourOfAKindResult result = service.isFourOfAKind(new String[]{"5H", "5C", "6S", "5S", "5D"});
-    Assertions.assertNotNull(result);
-  }
+    @Test
+    public void notNullResultTest() {
+        Assertions.assertNotNull(service.getFourOfAKindResult(new Card[]{HEARTS_5, CLUBS_5, SPADES_6, SPADES_7, DIAMONDS_KING}));
+        FourOfAKindResult result = service.getFourOfAKindResult(new Card[]{HEARTS_5, CLUBS_5, SPADES_6, SPADES_5, DIAMONDS_5});
+        Assertions.assertNotNull(result);
+    }
 
-  @Test
-  public void notFourOfAKindTest() {
-    FourOfAKindResult result = service.isFourOfAKind(new String[]{"5H", "5C", "6S", "7S", "KD"});
-    Assertions.assertFalse(result.isFull());
-  }
+    @Test
+    public void notFourOfAKindTest() {
+        FourOfAKindResult result = service.getFourOfAKindResult(new Card[]{HEARTS_5, CLUBS_5, SPADES_6, SPADES_7, DIAMONDS_KING});
+        Assertions.assertFalse(result.isFull());
+    }
 
-  @Test
-  public void fourOfAKindTest() {
-    FourOfAKindResult result = service.isFourOfAKind(new String[]{"5H", "5C", "5S", "7S", "5D"});
-    Assertions.assertTrue(result.isFull());
-  }
+    @Test
+    public void fourOfAKindTest() {
+        FourOfAKindResult result = service.getFourOfAKindResult(new Card[]{HEARTS_5, CLUBS_5, SPADES_5, SPADES_7, DIAMONDS_5});
+        Assertions.assertTrue(result.isFull());
+    }
 
-  @Test
-  public void player1WinsTest() {
-    FourOfAKindResult player1Result = service.isFourOfAKind(new String[]{"QH", "QC", "KS", "QS", "QD"});
-    FourOfAKindResult player2Result = service.isFourOfAKind(new String[]{"AH", "8C", "KS", "AS", "2D"});
-    Assertions.assertTrue(player1Result.compareTo(player2Result) > 0); // player2 wins
-  }
+    @Test
+    public void player1WinsTest() {
+        FourOfAKindResult player1Result = service.getFourOfAKindResult(new Card[]{HEARTS_QUEEN, CLUBS_QUEEN, SPADES_KING, SPADES_QUEEN, DIAMONDS_QUEEN});
+        FourOfAKindResult player2Result = service.getFourOfAKindResult(new Card[]{HEARTS_ACE, CLUBS_8, SPADES_KING, SPADES_ACE, DIAMONDS_2});
+        Assertions.assertTrue(player1Result.compareTo(player2Result) > 0); // player2 wins
+    }
 
-  @Test
-  public void player2WinsTest() {
-    FourOfAKindResult player1Result = service.isFourOfAKind(new String[]{"QH", "QC", "KS", "QS", "QD"});
-    FourOfAKindResult player2Result = service.isFourOfAKind(new String[]{"AH", "AC", "KS", "AS", "AD"});
-    Assertions.assertTrue(player1Result.compareTo(player2Result) < 0); // player2 wins
-  }
-
+    @Test
+    public void player2WinsTest() {
+        FourOfAKindResult player1Result = service.getFourOfAKindResult(new Card[]{HEARTS_QUEEN, CLUBS_QUEEN, SPADES_KING, SPADES_QUEEN, DIAMONDS_QUEEN});
+        FourOfAKindResult player2Result = service.getFourOfAKindResult(new Card[]{HEARTS_ACE, CLUBS_ACE, SPADES_KING, SPADES_ACE, DIAMONDS_ACE});
+        Assertions.assertTrue(player1Result.compareTo(player2Result) < 0); // player2 wins
+    }
 }

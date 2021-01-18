@@ -11,24 +11,24 @@ import lombok.Data;
 @Data
 public class StraightResult implements Serializable, Comparable<StraightResult> {
 
-  private final boolean isFull;
-  private final int highestCardValue;
+    private final boolean isFull;
+    private final Integer highestCardValue;
 
-  public StraightResult() {
-    isFull = false;
-    highestCardValue = 0;
-  }
+    public StraightResult() {
+        isFull = false;
+        highestCardValue = null;
+    }
 
-  public StraightResult(int highestCardValue) {
-    isFull = true;
-    this.highestCardValue = highestCardValue;
-  }
+    public StraightResult(Integer highestCardValue) {
+        isFull = true;
+        this.highestCardValue = highestCardValue;
+    }
 
-  @Override
-  public int compareTo(StraightResult player2Result) {
-    return Comparator.comparing(StraightResult::isFull)
-            .thenComparing(StraightResult::getHighestCardValue)
-            .compare(this, player2Result);
-  }
+    @Override
+    public int compareTo(StraightResult player2Result) {
+        return Comparator.comparing(StraightResult::isFull)
+                .thenComparing(StraightResult::getHighestCardValue, Comparator.nullsLast(Comparator.naturalOrder()))
+                .compare(this, player2Result);
+    }
 
 }

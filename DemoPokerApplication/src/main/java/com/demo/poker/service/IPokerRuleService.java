@@ -1,5 +1,6 @@
 package com.demo.poker.service;
 
+import com.demo.poker.model.Card;
 import com.demo.poker.model.rules.FlushResult;
 import com.demo.poker.model.rules.FourOfAKindResult;
 import com.demo.poker.model.rules.FullHouseResult;
@@ -17,24 +18,24 @@ import com.demo.poker.model.rules.TwoPairResult;
  */
 public interface IPokerRuleService {
 
-  RoyalFlushResult isRoyalFlush(String[] cards);
+    RoyalFlushResult getRoyalFlushResult(Card[] cards);
 
-  StraightFlushResult isStraightFlush(String[] cards);
+    StraightFlushResult getStraightFlushResult(Card[] cards);
 
-  FourOfAKindResult isFourOfAKind(String[] cards);
+    FourOfAKindResult getFourOfAKindResult(Card[] cards);
 
-  FullHouseResult isFullHouse(String[] cards);
+    FullHouseResult getFullHouseResult(Card[] cards);
 
-  FlushResult isFlush(String[] cards);
+    FlushResult getFlushResult(Card[] cards);
 
-  StraightResult isStraight(String[] cards);
+    StraightResult getStraightResult(Card[] cards);
 
-  ThreeOfAKindResult isThreeOfAKind(String[] cards);
+    ThreeOfAKindResult getThreeOfAKindResult(Card[] cards);
 
-  TwoPairResult isTwoPair(String[] args);
+    TwoPairResult getTwoPairResult(Card[] args);
 
-  OnePairResult isOnePair(String[] cards);
+    OnePairResult getOnePairResult(Card[] cards);
 
-  HighCardResult isHighCard(String[] cards);
+    HighCardResult getHighCardResult(Card[] cards);
 
 }

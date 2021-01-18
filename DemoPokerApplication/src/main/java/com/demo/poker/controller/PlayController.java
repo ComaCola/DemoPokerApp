@@ -5,11 +5,12 @@
  */
 package com.demo.poker.controller;
 
+import com.demo.poker.model.Card;
 import com.demo.poker.model.Game;
 import com.demo.poker.model.GameStatistic;
+import com.demo.poker.model.Player;
 import com.demo.poker.service.IPokerMatchService;
-import com.demo.poker.utils.Utils;
-import java.util.Arrays;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,37 +29,42 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Setter
 public class PlayController {
 
-  private final IPokerMatchService pokerMatchService;
+    private final IPokerMatchService pokerMatchService;
 
-  @Autowired
-  public PlayController(IPokerMatchService pokerMatchService) {
-    this.pokerMatchService = pokerMatchService;
-  }
+    //private final ConversionService conversionService;
+    @Autowired
+    public PlayController(IPokerMatchService pokerMatchService) {
+        this.pokerMatchService = pokerMatchService;
 
-  @GetMapping({"/", "/index", "index.html"})
-  public String index(ModelMap map) {
-    return "index";
-  }
+    }
 
-  @PostMapping(params = "reset")
-  public String reset() {
-    return "index";
-  }
+    @GetMapping({"/", "/index", "index.html"})
+    public String index(ModelMap map) {
+        return "index";
+    }
 
-  @PostMapping(params = "play")
-  public String play(ModelMap map, @RequestParam String data) {
+    @PostMapping(params = "reset")
+    public String reset() {
+        return "index";
+    }
 
-    final GameStatistic statistic = new GameStatistic();
-    Arrays.stream(data.split("\n")).forEach(line -> {
-      Game game = Utils.parseLineAndFillGame(line);
-      pokerMatchService.pokerMatch(game);
-      statistic.addGame(game);
-    });
-    statistic.makeStatistic();
+    @PostMapping(params = "play")
+    public String play(ModelMap map, @RequestParam("data") List<List<Card>> cardMatrix) {
+        GameStatistic statistic = new GameStatistic();
+        cardMatrix.forEach(cardList -> {
+            Game game = new Game(new Player(cardList.subList(0, 5).toArray(new Card[5])), new Player(cardList.subList(5, 10).toArray(new Card[5])));
+            pokerMatchService.pokerMatch(game);
+            statistic.addGame(game);
+        });
+        statistic.makeStatistic();
+        StringBuffer dataStringToFront = new StringBuffer();
 
-    map.addAttribute("data", data);
-    map.addAttribute("statistic", statistic);
-    return "index";
-  }
-
+        cardMatrix.stream().forEach(cardList -> {
+            cardList.stream().forEach(card -> dataStringToFront.append(card.getCode()).append(" "));
+            dataStringToFront.append("\n");
+        });
+        map.addAttribute("data", dataStringToFront);
+        map.addAttribute("statistic", statistic);
+        return "index";
+    }
 }

@@ -1,6 +1,8 @@
 package com.test.rules;
 
 import com.demo.poker.DemoPokerApplication;
+import static com.demo.poker.model.Card.*;
+import com.demo.poker.model.Card;
 import com.demo.poker.model.rules.TwoPairResult;
 import com.demo.poker.service.IPokerRuleService;
 import org.junit.jupiter.api.Assertions;
@@ -15,48 +17,48 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = DemoPokerApplication.class)
 public class TwoPairsRuleTest {
 
-  @Autowired
-  private IPokerRuleService service;
+    @Autowired
+    private IPokerRuleService service;
 
-  public TwoPairsRuleTest() {
-  }
+    public TwoPairsRuleTest() {
+    }
 
-  @Test
-  public void notNullResultTest() {
-    Assertions.assertNotNull(service.isTwoPair(new String[]{"QH", "QC", "KS", "2S", "4D"}));
-    Assertions.assertNotNull(service.isTwoPair(new String[]{"QH", "3C", "KS", "3S", "4D"}));
-  }
+    @Test
+    public void notNullResultTest() {
+        Assertions.assertNotNull(service.getTwoPairResult(new Card[]{HEARTS_QUEEN, CLUBS_QUEEN, SPADES_KING, SPADES_2, DIAMONDS_4}));
+        Assertions.assertNotNull(service.getTwoPairResult(new Card[]{HEARTS_QUEEN, CLUBS_3, SPADES_KING, SPADES_3, DIAMONDS_4}));
+    }
 
-  @Test
-  public void notTwoPairsResultTest() {
-    TwoPairResult result = service.isTwoPair(new String[]{"QH", "QC", "QS", "2S", "4D"});
-    Assertions.assertFalse(result.isFull());
-  }
+    @Test
+    public void notTwoPairsResultTest() {
+        TwoPairResult result = service.getTwoPairResult(new Card[]{HEARTS_QUEEN, CLUBS_QUEEN, SPADES_QUEEN, SPADES_2, DIAMONDS_4});
+        Assertions.assertFalse(result.isFull());
+    }
 
-  @Test
-  public void twoPairsResultTest() {
-    TwoPairResult result = service.isTwoPair(new String[]{"QH", "QC", "AS", "2S", "2D"});
-    Assertions.assertTrue(result.isFull());
-  }
+    @Test
+    public void twoPairsResultTest() {
+        TwoPairResult result = service.getTwoPairResult(new Card[]{HEARTS_QUEEN, CLUBS_QUEEN, SPADES_ACE, SPADES_2, DIAMONDS_2});
+        Assertions.assertTrue(result.isFull());
+    }
 
-  @Test
-  public void player1WinsTest() {
-    TwoPairResult player1Result = service.isTwoPair(new String[]{"QH", "QC", "KS", "TS", "KD"});
-    TwoPairResult player2Result = service.isTwoPair(new String[]{"AH", "8C", "8S", "2S", "2D"});
-    Assertions.assertTrue(player1Result.compareTo(player2Result) > 0); // player2 wins
-  }
+    @Test
+    public void player1WinsTest() {
+        TwoPairResult player1Result = service.getTwoPairResult(new Card[]{HEARTS_QUEEN, CLUBS_QUEEN, SPADES_KING, SPADES_10, DIAMONDS_KING});
+        TwoPairResult player2Result = service.getTwoPairResult(new Card[]{HEARTS_ACE, CLUBS_8, SPADES_8, SPADES_2, DIAMONDS_2});
+        Assertions.assertTrue(player1Result.compareTo(player2Result) > 0); // player2 wins
+    }
 
-  @Test
-  public void player1WinsWithLastCardTest() {
-    TwoPairResult player1Result = service.isTwoPair(new String[]{"QH", "QC", "KS", "TS", "KD"});
-    TwoPairResult player2Result = service.isTwoPair(new String[]{"QS", "8C", "KH", "KC", "QD"});
-    Assertions.assertTrue(player1Result.compareTo(player2Result) > 0); // player2 wins
-  }
+    @Test
+    public void player1WinsWithLastCardTest() {
+        TwoPairResult player1Result = service.getTwoPairResult(new Card[]{HEARTS_QUEEN, Card.CLUBS_QUEEN, SPADES_KING, SPADES_10, DIAMONDS_KING});
+        TwoPairResult player2Result = service.getTwoPairResult(new Card[]{SPADES_QUEEN, CLUBS_8, HEARTS_KING, CLUBS_KING, DIAMONDS_QUEEN});
+        Assertions.assertTrue(player1Result.compareTo(player2Result) > 0); // player2 wins
+    }
 
-  @Test
-  public void player2WinsTest() {
-    TwoPairResult player1Result = service.isTwoPair(new String[]{"QH", "QC", "KS", "5S", "5D"});
-    TwoPairResult player2Result = service.isTwoPair(new String[]{"QH", "2C", "2S", "AS", "AD"});
-    Assertions.assertTrue(player1Result.compareTo(player2Result) < 0); // player2 wins
-  }
+    @Test
+    public void player2WinsTest() {
+        TwoPairResult player1Result = service.getTwoPairResult(new Card[]{HEARTS_QUEEN, CLUBS_QUEEN, SPADES_KING, SPADES_5, DIAMONDS_5});
+        TwoPairResult player2Result = service.getTwoPairResult(new Card[]{HEARTS_QUEEN, CLUBS_2, SPADES_2, SPADES_ACE, DIAMONDS_ACE});
+        Assertions.assertTrue(player1Result.compareTo(player2Result) < 0); // player2 wins
+    }
 }
