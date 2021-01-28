@@ -22,211 +22,127 @@ import org.springframework.stereotype.Service;
 @Service
 public class PokerMatchServiceImpl implements IPokerMatchService {
 
-  @Autowired
-  private IPokerRuleService pokerRuleService;
+    @Autowired
+    private IPokerRuleService pokerRuleService;
 
-  @Override
-  public void pokerMatch(Game game) {
-    royalFlushMatch(game);
-  }
-
-  private void royalFlushMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.ROYAL_FLUSH);
-
-    RoyalFlushResult royalFlushResult1 = pokerRuleService.getRoyalFlushResult(game.getPlayer1().getCards());
-    RoyalFlushResult royalFlushResult2 = pokerRuleService.getRoyalFlushResult(game.getPlayer2().getCards());
-
-    int result = royalFlushResult1.compareTo(royalFlushResult2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        straightFlushMatch(game);
-        break;
+    @Override
+    public void pokerMatch(Game game) {
+        playRoyalFlushMatch(game);
     }
-  }
 
-  private void straightFlushMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.STRAIGHT_FLUSH);
+    private void playRoyalFlushMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.ROYAL_FLUSH);
 
-    StraightFlushResult result1 = pokerRuleService.getStraightFlushResult(game.getPlayer1().getCards());
-    StraightFlushResult result2 = pokerRuleService.getStraightFlushResult(game.getPlayer2().getCards());
+        RoyalFlushResult result1 = pokerRuleService.getRoyalFlushResult(game.getPlayer1().getCards());
+        RoyalFlushResult result2 = pokerRuleService.getRoyalFlushResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
 
-    int result = result1.compareTo(result2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        fourOfAKindMatch(game);
-        break;
+        if (game.isNoWinners()) {
+            playStraightFlushMatch(game);
+        }
     }
-  }
 
-  private void fourOfAKindMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.FOUR_OF_A_KIND);
+    private void playStraightFlushMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.STRAIGHT_FLUSH);
 
-    FourOfAKindResult result1 = pokerRuleService.getFourOfAKindResult(game.getPlayer1().getCards());
-    FourOfAKindResult result2 = pokerRuleService.getFourOfAKindResult(game.getPlayer2().getCards());
+        StraightFlushResult result1 = pokerRuleService.getStraightFlushResult(game.getPlayer1().getCards());
+        StraightFlushResult result2 = pokerRuleService.getStraightFlushResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
 
-    int result = result1.compareTo(result2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        fullHouseMatch(game);
-        break;
+        if (game.isNoWinners()) {
+            playFourOfAKindMatch(game);
+        }
     }
-  }
 
-  private void fullHouseMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.FULL_HOUSE);
+    private void playFourOfAKindMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.FOUR_OF_A_KIND);
 
-    FullHouseResult result1 = pokerRuleService.getFullHouseResult(game.getPlayer1().getCards());
-    FullHouseResult result2 = pokerRuleService.getFullHouseResult(game.getPlayer2().getCards());
+        FourOfAKindResult result1 = pokerRuleService.getFourOfAKindResult(game.getPlayer1().getCards());
+        FourOfAKindResult result2 = pokerRuleService.getFourOfAKindResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
 
-    int result = result1.compareTo(result2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        flushMatch(game);
-        break;
+        if (game.isNoWinners()) {
+            playFullHouseMatch(game);
+        }
     }
-  }
 
-  private void flushMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.FLUSH);
+    private void playFullHouseMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.FULL_HOUSE);
 
-    FlushResult result1 = pokerRuleService.getFlushResult(game.getPlayer1().getCards());
-    FlushResult result2 = pokerRuleService.getFlushResult(game.getPlayer2().getCards());
+        FullHouseResult result1 = pokerRuleService.getFullHouseResult(game.getPlayer1().getCards());
+        FullHouseResult result2 = pokerRuleService.getFullHouseResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
 
-    int result = result1.compareTo(result2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        straightMatch(game);
-        break;
+        if (game.isNoWinners()) {
+            playFlushMatch(game);
+        }
     }
-  }
 
-  private void straightMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.STRAIGHT);
+    private void playFlushMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.FLUSH);
 
-    StraightResult result1 = pokerRuleService.getStraightResult(game.getPlayer1().getCards());
-    StraightResult result2 = pokerRuleService.getStraightResult(game.getPlayer2().getCards());
+        FlushResult result1 = pokerRuleService.getFlushResult(game.getPlayer1().getCards());
+        FlushResult result2 = pokerRuleService.getFlushResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
 
-    int result = result1.compareTo(result2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        threeOfAKindMatch(game);
-        break;
+        if (game.isNoWinners()) {
+            playStraightMatch(game);
+        }
     }
-  }
 
-  private void threeOfAKindMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.THREE_OF_A_KIND);
+    private void playStraightMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.STRAIGHT);
 
-    ThreeOfAKindResult result1 = pokerRuleService.getThreeOfAKindResult(game.getPlayer1().getCards());
-    ThreeOfAKindResult result2 = pokerRuleService.getThreeOfAKindResult(game.getPlayer2().getCards());
+        StraightResult result1 = pokerRuleService.getStraightResult(game.getPlayer1().getCards());
+        StraightResult result2 = pokerRuleService.getStraightResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
 
-    int result = result1.compareTo(result2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        twoPairMatch(game);
-        break;
+        if (game.isNoWinners()) {
+            playThreeOfAKindMatch(game);
+        }
     }
-  }
 
-  private void twoPairMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.TWO_PAIR);
+    private void playThreeOfAKindMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.THREE_OF_A_KIND);
 
-    TwoPairResult result1 = pokerRuleService.getTwoPairResult(game.getPlayer1().getCards());
-    TwoPairResult result2 = pokerRuleService.getTwoPairResult(game.getPlayer2().getCards());
+        ThreeOfAKindResult result1 = pokerRuleService.getThreeOfAKindResult(game.getPlayer1().getCards());
+        ThreeOfAKindResult result2 = pokerRuleService.getThreeOfAKindResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
 
-    int result = result1.compareTo(result2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        onePairMatch(game);
-        break;
+        if (game.isNoWinners()) {
+            playTwoPairMatch(game);
+        }
     }
-  }
 
-  private void onePairMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.ONE_PAIR);
+    private void playTwoPairMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.TWO_PAIR);
 
-    OnePairResult result1 = pokerRuleService.getOnePairResult(game.getPlayer1().getCards());
-    OnePairResult result2 = pokerRuleService.getOnePairResult(game.getPlayer2().getCards());
+        TwoPairResult result1 = pokerRuleService.getTwoPairResult(game.getPlayer1().getCards());
+        TwoPairResult result2 = pokerRuleService.getTwoPairResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
 
-    int result = result1.compareTo(result2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        highCardMatch(game);
-        break;
+        if (game.isNoWinners()) {
+            playOnePairMatch(game);
+        }
     }
-  }
 
-  private void highCardMatch(Game game) {
-    game.setPokerRule(PokerRuleEnum.HIGH_CARD);
+    private void playOnePairMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.ONE_PAIR);
 
-    HighCardResult result1 = pokerRuleService.getHighCardResult(game.getPlayer1().getCards());
-    HighCardResult result2 = pokerRuleService.getHighCardResult(game.getPlayer2().getCards());
+        OnePairResult result1 = pokerRuleService.getOnePairResult(game.getPlayer1().getCards());
+        OnePairResult result2 = pokerRuleService.getOnePairResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
 
-    int result = result1.compareTo(result2);
-    switch (result) {
-      case 1:
-        game.player1Wins();
-        break;
-      case -1:
-        game.player2Wins();
-        break;
-      default:
-        game.noWinners();
-        break;
+        if (game.isNoWinners()) {
+            playHighCardMatch(game);
+        }
     }
-  }
+
+    private void playHighCardMatch(Game game) {
+        game.setPokerRule(PokerRuleEnum.HIGH_CARD);
+
+        HighCardResult result1 = pokerRuleService.getHighCardResult(game.getPlayer1().getCards());
+        HighCardResult result2 = pokerRuleService.getHighCardResult(game.getPlayer2().getCards());
+        game.processResult(result1, result2);
+    }
 }

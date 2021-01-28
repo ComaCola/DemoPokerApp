@@ -62,7 +62,7 @@ public class RoyalFlushRuleTest {
     @Test
     public void noRoyalFlushTest() {
         RoyalFlushResult player1Result = service.getRoyalFlushResult(new Card[]{DIAMONDS_5, DIAMONDS_JACK, DIAMONDS_10, DIAMONDS_KING, DIAMONDS_QUEEN});
-        RoyalFlushResult player2Result = service.getRoyalFlushResult(new Card[]{SPADES_10, SPADES_KING, SPADES_JACK, SPADES_ACE, SPADES_QUEEN});
+        RoyalFlushResult player2Result = service.getRoyalFlushResult(new Card[]{SPADES_10, SPADES_KING, SPADES_JACK, SPADES_ACE, HEARTS_QUEEN});
         Assertions.assertTrue(player1Result.compareTo(player2Result) == 0);
     }
 }

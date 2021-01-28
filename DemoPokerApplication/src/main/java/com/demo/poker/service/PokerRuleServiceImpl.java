@@ -209,7 +209,7 @@ public class PokerRuleServiceImpl implements IPokerRuleService {
         if (cards.size() < 4) {
             return false;
         }
-        for (int i = 0; i < cards.size() - 2; i++) {
+        for (int i = 0; i < cards.size() - 1; i++) {
             if (cards.get(i).getValue() + 1 != cards.get(i + 1).getValue()) {
                 return false;
             }

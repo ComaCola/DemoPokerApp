@@ -2,15 +2,13 @@ package com.demo.poker.model.rules;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  *
  * @author Deividas
  */
-@Data
-@AllArgsConstructor
+//@Data
+//@AllArgsConstructor
 public class HighCardResult implements Serializable, Comparable<HighCardResult> {
 
     private final Integer highestCardValue;
@@ -27,6 +25,34 @@ public class HighCardResult implements Serializable, Comparable<HighCardResult> 
                 .thenComparing(HighCardResult::getFourthCardValue)
                 .thenComparing(HighCardResult::getFifthCardValue)
                 .compare(this, player2Result);
+    }
+
+    public Integer getHighestCardValue() {
+        return highestCardValue;
+    }
+
+    public Integer getSecondCardValue() {
+        return secondCardValue;
+    }
+
+    public Integer getThirdCardValue() {
+        return thirdCardValue;
+    }
+
+    public Integer getFourthCardValue() {
+        return fourthCardValue;
+    }
+
+    public Integer getFifthCardValue() {
+        return fifthCardValue;
+    }
+
+    public HighCardResult(Integer highestCardValue, Integer secondCardValue, Integer thirdCardValue, Integer fourthCardValue, Integer fifthCardValue) {
+        this.highestCardValue = highestCardValue;
+        this.secondCardValue = secondCardValue;
+        this.thirdCardValue = thirdCardValue;
+        this.fourthCardValue = fourthCardValue;
+        this.fifthCardValue = fifthCardValue;
     }
 
 }

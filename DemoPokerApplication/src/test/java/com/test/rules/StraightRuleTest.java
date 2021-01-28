@@ -31,7 +31,7 @@ public class StraightRuleTest {
 
     @Test
     public void notStraightResultTest() {
-        StraightResult result = service.getStraightResult(new Card[]{HEARTS_QUEEN, CLUBS_ACE, SPADES_KING, SPADES_2, DIAMONDS_4});
+        StraightResult result = service.getStraightResult(new Card[]{HEARTS_2, HEARTS_4, SPADES_ACE, SPADES_3, SPADES_6});
         Assertions.assertFalse(result.isFull());
     }
 
